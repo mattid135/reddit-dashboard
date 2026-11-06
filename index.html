@@ -9,373 +9,388 @@
 <style>
   :root { color-scheme: dark; }
   * { box-sizing: border-box; }
-  body { margin: 0; font-family: Tahoma, "Vazirmatn", sans-serif; background: #0b0f1a; color: #e8ecf5; }
-  header { padding: 20px 24px; background: linear-gradient(90deg, #1b1f3b, #0b0f1a); border-bottom: 1px solid #222a44; }
-  h1 { margin: 0 0 6px; font-size: 22px; }
-  header p { margin: 0; color: #8a94b0; font-size: 13px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; padding: 16px; }
-  .card { display: flex; flex-direction: column; background: #151b2e; border: 1px solid #222a44; border-radius: 12px;
-          overflow: hidden; text-decoration: none; color: inherit; transition: transform .15s, border-color .15s; }
-  .card:hover { transform: translateY(-3px); border-color: #5b6cff; }
-  .thumb { position: relative; height: 170px; background: #0e1322; }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .noimg { height: 100%; display: flex; align-items: center; justify-content: center; color: #56607e; font-size: 13px; }
-  .badge { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,.7); padding: 4px 8px;
-           border-radius: 8px; font-size: 12px; }
-  .body { padding: 12px; }
-  .title { font-size: 14px; line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 3;
-           -webkit-box-orient: vertical; overflow: hidden; }
-  .meta { margin-top: 8px; font-size: 12px; color: #8a94b0; }
+  [hidden] { display: none !important; }
+  body {
+    margin: 0; min-height: 100vh; color: #e8ecf5;
+    font-family: Tahoma, Vazirmatn, system-ui, sans-serif;
+    background: radial-gradient(1200px 600px at 50% -200px, #1d2350 0%, #0b0f1a 60%) fixed, #0b0f1a;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
+
+  header { padding: 28px 0 8px; }
+  .brand { font-size: 12px; letter-spacing: .5px; color: #8a94b0; margin-bottom: 6px; }
+  h1 { margin: 0; font-size: 26px; font-weight: 800; }
+  .grad {
+    background: linear-gradient(90deg, #f5b301, #ec4899, #3b82f6, #22c55e);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { margin-top: 6px; color: #8a94b0; font-size: 13px; }
+
+  .tabs {
+    display: flex; gap: 8px; overflow-x: auto; padding: 14px 0; margin-top: 10px;
+    scrollbar-width: none; position: sticky; top: 0; z-index: 5;
+    background: rgba(11, 15, 26, .85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid #1e2640;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 8px;
+    padding: 9px 14px; border-radius: 999px; cursor: pointer;
+    border: 1px solid #232c48; background: #121829; color: #c8d0e6;
+    font: inherit; font-size: 13px; transition: .15s;
+  }
+  .tab:hover { border-color: #3a4670; }
+  .tab .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+  .tab .n { background: #1b2340; border-radius: 999px; padding: 1px 8px; font-size: 12px; color: #8a94b0; }
+  .tab.active { background: var(--c); border-color: transparent; color: #0b0f1a; font-weight: 700; }
+  .tab.active .dot { background: #0b0f1a; }
+  .tab.active .n { background: rgba(0, 0, 0, .18); color: #0b0f1a; }
+
+  .cat-desc { padding: 14px 0 0; color: #8a94b0; font-size: 13px; min-height: 20px; }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px; padding: 18px 0 40px;
+  }
+  .card {
+    position: relative; display: flex; flex-direction: column;
+    background: #131a2d; border: 1px solid #1f2843; border-radius: 16px; overflow: hidden;
+    text-decoration: none; color: inherit;
+    transition: transform .2s, border-color .2s, box-shadow .2s;
+  }
+  .card:hover { transform: translateY(-4px); border-color: var(--c); box-shadow: 0 12px 30px -14px var(--c); }
+  .thumb { position: relative; height: 168px; background: #0e1322; overflow: hidden; }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s; }
+  .card:hover .thumb img { transform: scale(1.04); }
+  .ph {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; opacity: .35; background: linear-gradient(135deg, #131a2d, #0e1322);
+  }
+  .badge {
+    position: absolute; top: 10px; right: 10px; font-size: 11px; color: #fff;
+    background: rgba(10, 13, 22, .8); border: 1px solid var(--c);
+    padding: 4px 10px; border-radius: 999px; backdrop-filter: blur(4px);
+  }
+  .body { padding: 14px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .title {
+    font-size: 14px; line-height: 1.7; min-height: 72px; overflow: hidden;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical;
+  }
+  .foot { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #8a94b0; margin-top: auto; }
+  .sub-tag { color: var(--c); font-weight: 700; }
+  .stats { direction: ltr; }
+
+  .empty {
+    grid-column: 1 / -1; text-align: center; padding: 60px 20px; margin: 18px 0 40px;
+    border: 1px dashed #2a3557; border-radius: 16px; color: #8a94b0;
+  }
+  .empty .ico { font-size: 44px; margin-bottom: 10px; opacity: .8; }
+  .empty h3 { color: #e8ecf5; margin: 0 0 8px; font-size: 18px; }
+  .empty p { margin: 6px auto; font-size: 13px; line-height: 1.8; max-width: 560px; }
+
+  footer { padding: 0 0 30px; color: #56607e; font-size: 12px; text-align: center; }
 </style>
 </head>
 <body>
-<header>
-  <h1>ترندهای ردیت</h1>
-  <p>49 پست · آخرین بروزرسانی: ۱۴۰۵/۸/۱۵, ۱۶:۴۴:۱۳</p>
-</header>
-<main class="grid">
-      <a class="card" href="https://www.reddit.com/r/SipsTea/comments/1xpocf7/florida_next/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/o5d0yxjt520i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+<div class="wrap">
+  <header>
+    <div class="brand">SocialTrendz · Reddit Radar</div>
+    <h1>ترندهای <span class="grad">ردیت</span></h1>
+    <div class="sub">15 پست · آخرین بروزرسانی: ۱۴۰۵/۸/۱۵, ۱۷:۴۲:۲۱</div>
+  </header>
+
+  <nav class="tabs" id="tabs"><button class="tab active" data-key="all" data-desc="همه‌ی دسته‌ها" style="--c:#e8ecf5">
+         همه <span class="n">15</span></button><button class="tab" data-key="trends" data-desc="ترندهای اینستاگرام، تیک‌تاک، X، هشتگ‌های داغ و اتفاقات بین‌المللی" style="--c:#f5b301">
+           <span class="dot"></span>ترندهای روز <span class="n">0</span></button><button class="tab" data-key="memes" data-desc="میم‌ها، ویدیوهای خنده‌دار، عکس و کپشن‌های فان و شوخی‌های اینترنتی" style="--c:#ec4899">
+           <span class="dot"></span>میم و فان <span class="n">10</span></button><button class="tab" data-key="facts" data-desc="نکات جالب، حقایق شنیده‌نشده، تکنولوژی و دانستنی‌های روزمره" style="--c:#22c55e">
+           <span class="dot"></span>فکت و دانستنی <span class="n">1</span></button><button class="tab" data-key="viral" data-desc="حاشیه‌های شبکه‌های اجتماعی، سلبریتی‌ها، اتفاقات ایران و واکنش‌ها" style="--c:#3b82f6">
+           <span class="dot"></span>اتفاقات داغ <span class="n">2</span></button><button class="tab" data-key="video" data-desc="کلیپ‌های کوتاه، ویدیوهای وایرال، ریلزهای اینستاگرام و خلاصه ویدیوهای جذاب" style="--c:#a855f7">
+           <span class="dot"></span>ویدیو و کلیپ <span class="n">2</span></button></nav>
+  <div class="cat-desc" id="catdesc"></div>
+
+  <main class="grid" id="grid">
+    
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/mildlyinfuriating/comments/1xpnhay/my_neighbor_brings_a_multimonitor_setup_to_the/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://i.redd.it/cp73fi33z10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">Florida next</div>
-          <div class="meta">r/SipsTea · ⬆️ 2696 · 💬 150</div>
+          <div class="title">My neighbor brings a multi-monitor setup to the community pool and takes loud conference calls all day.</div>
+          <div class="foot">
+            <span class="sub-tag">r/mildlyinfuriating</span>
+            <span class="stats">⬆ 29795 · 💬 5084</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/AskReddit/comments/1xpln5t/in_the_united_states_when_we_teach_kids_to_count/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">🧠 فکت و دانستنی</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/mildlyinfuriating/comments/1xplie0/nephews_just_threw_30_worth_of_food_because_they/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div>
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">In the United States, when we teach kids to count seconds, we say, &quot;One Mississippi, Two Mississippi,&quot; etc (to keep from counting too fast). What phrase do folks in other countries use to count seconds? Or do they use a phrase at all?</div>
-          <div class="meta">r/AskReddit · ⬆️ 765 · 💬 572</div>
+          <div class="title">Nephews just threw $30 worth of food because they didn&#39;t like what THEY chose to order.</div>
+          <div class="foot">
+            <span class="sub-tag">r/mildlyinfuriating</span>
+            <span class="stats">⬆ 5050 · 💬 1497</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/AskReddit/comments/1xpn0kh/trump_just_appointed_stephen_miller_as_his_new/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">🧠 فکت و دانستنی</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/GirlDinnerDiaries/comments/1xpkb15/my_first_book_is_out_in_the_world_and_im_so_proud/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://i.redd.it/e5wky28sc10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">Trump just appointed Stephen Miller as his new White House chief of staff. What are your thoughts on this?</div>
-          <div class="meta">r/AskReddit · ⬆️ 534 · 💬 496</div>
+          <div class="title">My first book is out in the world and I’m so proud!!</div>
+          <div class="foot">
+            <span class="sub-tag">r/GirlDinnerDiaries</span>
+            <span class="stats">⬆ 1005 · 💬 48</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/NoStupidQuestions/comments/1xpkx0b/if_a_fish_is_removed_from_water_for_a_while_but/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">🧠 فکت و دانستنی</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/GirlDinnerDiaries/comments/1xplttp/neighbors_want_me_to_befriend_their_daughter/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://i.redd.it/5ndworlen10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">If a fish is removed from water for a while but returned before it dies, will it have brain damage?</div>
-          <div class="meta">r/NoStupidQuestions · ⬆️ 506 · 💬 94</div>
+          <div class="title">Neighbors want me to befriend their daughter</div>
+          <div class="foot">
+            <span class="sub-tag">r/GirlDinnerDiaries</span>
+            <span class="stats">⬆ 663 · 💬 91</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/dashcams/comments/1xpmdcl/ford_driver_did_not_turn_wide_enough/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/ford-driver-did-not-turn-wide-enough-v0-Z2hmcjBlbTdyMTBpMeWSNfIpFavvsvVnG6b8f7KlJiwFRyDL8sY94Og8oSq2.jpeg?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=a538fe2487bf29dd05f0628faa8a8bf3abc5ac5c" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">🎬 ویدیو و کلیپ</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/GirlDinnerDiaries/comments/1xpntkl/hooked_up_with_a_celebrity_in_europe/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://i.redd.it/8pzxi410220i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">Ford driver did not turn wide enough</div>
-          <div class="meta">r/dashcams · ⬆️ 901 · 💬 116</div>
+          <div class="title">hooked up with a celebrity in europe</div>
+          <div class="foot">
+            <span class="sub-tag">r/GirlDinnerDiaries</span>
+            <span class="stats">⬆ 616 · 💬 122</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/nextfuckinglevel/comments/1xpg0k3/she_has_a_great_patience/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/she-has-a-great-patience-v0-d24wNDd3cDdqMDBpMQu51B5JGgMmkjUCOL9hsK3QYyM6WFu6ULNL4O1hHFgG.png?format=pjpg&amp;auto=webp&amp;s=69c3c46f15c0802506d6635e0b40974fa137d7a5" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/LoveTrash/comments/1xphfrx/you_can_add_it_to_almost_anything_really/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://i.redd.it/mnefdu07t00i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">She has a great patience</div>
-          <div class="meta">r/nextfuckinglevel · ⬆️ 1690 · 💬 241</div>
+          <div class="title">You can add it to almost anything, really.</div>
+          <div class="foot">
+            <span class="sub-tag">r/LoveTrash</span>
+            <span class="stats">⬆ 1910 · 💬 12</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/interestingasfuck/comments/1xpgivi/the_fly_aint_getting_over_it/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/the-fly-aint-getting-over-it-v0-dWtlaHp0NnNtMDBpMcp7U2ypUQfeAMfLTpPvdd9dVl2rgZY-uVrQ_b6R2WEM.png?format=pjpg&amp;auto=webp&amp;s=badffd2d2841de67da1f0f9845110c6d99f32c9b" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/LoveTrash/comments/1xpgufh/the_drunk_cops/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://external-preview.redd.it/the-drunk-cops-v0-enJlNmp3dzJwMDBpMTdZ9RbjONyKd1Q1dfcEAaybY2P8quy365JUcHHEOfnv.png?format=pjpg&amp;auto=webp&amp;s=ad2acc21ae12b0c963e1c3a1f4405f50562d2115" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">The fly ain&#39;t getting over it.</div>
-          <div class="meta">r/interestingasfuck · ⬆️ 3629 · 💬 673</div>
+          <div class="title">The drunk cops</div>
+          <div class="foot">
+            <span class="sub-tag">r/LoveTrash</span>
+            <span class="stats">⬆ 786 · 💬 12</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/BeAmazed/comments/1xpbx2e/stray_cat_defends_human_and_their_dog_from_an/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/stray-cat-defends-human-and-their-dog-from-an-attack-and-v0-dnVqd202aDhuenpoMV56GrNVhi0d3htuFo2k6377dtCdTL771-uXY0s3WUFa.png?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=21f5461d80890e5bce6b678e77b0cccfab4ea2f2" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/TopCharacterTropes/comments/1xphihl/the_oh_my_god_theyre_a_nazi_moment/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://preview.redd.it/the-oh-my-god-theyre-a-nazi-moment-v0-mki8z28qt00i1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=844b6960ac116252263d03e943582021517b17b1" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">Stray cat defends human and their dog from an attack and gets adopted</div>
-          <div class="meta">r/BeAmazed · ⬆️ 1634 · 💬 40</div>
+          <div class="title">The “Oh my god, they’re a Nazi” moment.</div>
+          <div class="foot">
+            <span class="sub-tag">r/TopCharacterTropes</span>
+            <span class="stats">⬆ 8729 · 💬 1550</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/PoursTea/comments/1xpn5pl/democratic_renaissance/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/47kbl9v1x10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/TopCharacterTropes/comments/1xpl9op/video_game_trope_the_quest_gamers_avoid/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://preview.redd.it/video-game-trope-the-quest-gamers-avoid-v0-ngr24z9gj10i1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=0ae2419ed7fbb95af751b130e331ee513ffb8716" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">Democratic renaissance.</div>
-          <div class="meta">r/PoursTea · ⬆️ 2155 · 💬 44</div>
+          <div class="title">(Video game trope) the quest gamers avoid</div>
+          <div class="foot">
+            <span class="sub-tag">r/TopCharacterTropes</span>
+            <span class="stats">⬆ 3634 · 💬 624</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/PoursTea/comments/1xpib23/_/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/jdv5dar3z00i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="memes" style="--c:#ec4899" href="https://www.reddit.com/r/TopCharacterTropes/comments/1xplha7/fan_made_interpretations_of_things_we_never_see/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">😂</div><img src="https://preview.redd.it/fan-made-interpretations-of-things-we-never-see-officially-v0-38p2d98vg10i1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=00296a5ea9528e095f3511cdf659dc98158e029b" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">😂 میم و فان</span>
+        </div>
         <div class="body">
-          <div class="title">🙏</div>
-          <div class="meta">r/PoursTea · ⬆️ 981 · 💬 27</div>
+          <div class="title">Fan made interpretations of things we never see officially</div>
+          <div class="foot">
+            <span class="sub-tag">r/TopCharacterTropes</span>
+            <span class="stats">⬆ 2427 · 💬 179</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/blackcats/comments/1xpnlfa/meet_ember/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://preview.redd.it/meet-ember-v0-xz9qwknb020i1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=ddde86e1ea5ff16c2e4e54c9f033da6d8f3951d4" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="facts" style="--c:#22c55e" href="https://www.reddit.com/r/interestingasfuck/comments/1xphwvk/a_deep_sea_oarfish_also_known_as_the_doomsday/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">🧠</div><img src="https://external-preview.redd.it/a-deep-sea-oarfish-also-known-as-the-doomsday-fish-which-v0-bzE3ZjRxeWh3MDBpMclabDbM-0IY20v3VHNvJ2rHv7F5536nvKdFeBRgqnSs.png?format=pjpg&amp;auto=webp&amp;s=7a0dc79f3938f4a99a144ef6871fe5fa1aab767a" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">🧠 فکت و دانستنی</span>
+        </div>
         <div class="body">
-          <div class="title">Meet Ember 🔥</div>
-          <div class="meta">r/blackcats · ⬆️ 795 · 💬 27</div>
+          <div class="title">A &quot;Deep Sea Oarfish&quot; also known as the &quot;DOOMSDAY&quot; fish, which got swept ashore.</div>
+          <div class="foot">
+            <span class="sub-tag">r/interestingasfuck</span>
+            <span class="stats">⬆ 3524 · 💬 536</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/technology/comments/1xpksua/the_ugly_car_that_sucks_has_died/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/_1oN2EQJF28q7CW0H06PCTdGddANu7aSwmNpv8sqkqA.jpeg?width=140&amp;height=82&amp;auto=webp&amp;s=bf26044efec99129b32e44932593288c1a828985" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">📈 ترندهای روز</span></div>
+      <a class="card" data-cat="viral" style="--c:#3b82f6" href="https://www.reddit.com/r/popculturechat/comments/1xpkjc6/tribute_mural_unveiled_in_honor_of_the_late_sir/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">📣</div><img src="https://i.redd.it/tr3v88gee10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">📣 اتفاقات داغ</span>
+        </div>
         <div class="body">
-          <div class="title">The Ugly Car That Sucks Has Died</div>
-          <div class="meta">r/technology · ⬆️ 5014 · 💬 329</div>
+          <div class="title">Tribute mural unveiled in honor of the late Sir Patrick Stewart in his birthplace of Mirfield, West Yorkshire.</div>
+          <div class="foot">
+            <span class="sub-tag">r/popculturechat</span>
+            <span class="stats">⬆ 3160 · 💬 16</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/toolgifs/comments/1xpln6l/autoretracting_excavator_ladder/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/auto-retracting-excavator-ladder-v0-OWlkZzYycjNtMTBpMc_7VN2zJsEGymgHrA8u3_3c8FYQcsagMSxiv0hwWVg1.jpeg?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=fc8de7e7c52d52ccb986cb9752edec39094913ed" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">🎬 ویدیو و کلیپ</span></div>
+      <a class="card" data-cat="viral" style="--c:#3b82f6" href="https://www.reddit.com/r/PoursTea/comments/1xpotq2/over_66_of_republicans_support_the_electoral/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">📣</div><img src="https://i.redd.it/euziusze920i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">📣 اتفاقات داغ</span>
+        </div>
         <div class="body">
-          <div class="title">Auto-retracting excavator ladder</div>
-          <div class="meta">r/toolgifs · ⬆️ 449 · 💬 11</div>
+          <div class="title">Over 66% of Republicans support the electoral college. They might be about to lose it.</div>
+          <div class="foot">
+            <span class="sub-tag">r/PoursTea</span>
+            <span class="stats">⬆ 623 · 💬 66</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/AccidentalSlapStick/comments/1xpkb3e/folded/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/enBqa3NrY3NjMTBpMRbptFV0aPCGDQSJoesrHbg2_w6iSWd0DEvzwepJHwy9.png?format=pjpg&amp;auto=webp&amp;s=ea36a3e662e06ea691ae10ba30ce7893b8b00933" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">🎬 ویدیو و کلیپ</span></div>
+      <a class="card" data-cat="video" style="--c:#a855f7" href="https://www.reddit.com/r/dashcams/comments/1xpnzu4/that_karma_is_instant/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">🎬</div><img src="https://external-preview.redd.it/that-karma-is-instant-v0-dGQ3bHc4ajkzMjBpMXp_Ae4P4jWh2oyvEjYhOmSAS5RwzSx6Di3n76CY2P5T.png?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=088b2ea598b28e4bda10e396cf9ede7c441dfa88" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">🎬 ویدیو و کلیپ</span>
+        </div>
         <div class="body">
-          <div class="title">Folded</div>
-          <div class="meta">r/AccidentalSlapStick · ⬆️ 384 · 💬 105</div>
+          <div class="title">That Karma is Instant</div>
+          <div class="foot">
+            <span class="sub-tag">r/dashcams</span>
+            <span class="stats">⬆ 494 · 💬 83</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/NatureIsFuckingLit/comments/1xpkhjj/a_unique_moment_where_a_sea_otter_family_meets_a/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/a-unique-moment-where-a-sea-otter-family-meets-a-river-otter-v0-aWFuaG1uOTBlMTBpMZK9xqT-mRCFGRookZje89RYizhZCzY2uQrcp7no2jE4.png?format=pjpg&amp;auto=webp&amp;s=01026f5d9ff3ff8080cf0323ba78598a5aa6acb2" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
+      <a class="card" data-cat="video" style="--c:#a855f7" href="https://www.reddit.com/r/blackcats/comments/1xpo07l/please_share_pics_of_your_voids/" target="_blank" rel="noopener noreferrer">
+        <div class="thumb">
+          <div class="ph">🎬</div><img src="https://i.redd.it/6p8vg0xd320i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt="" onerror="this.remove()">
+          <span class="badge">🎬 ویدیو و کلیپ</span>
+        </div>
         <div class="body">
-          <div class="title">🔥A unique moment where a sea otter family meets a river otter.</div>
-          <div class="meta">r/NatureIsFuckingLit · ⬆️ 1590 · 💬 147</div>
+          <div class="title">Please share pics of your voids 💔</div>
+          <div class="foot">
+            <span class="sub-tag">r/blackcats</span>
+            <span class="stats">⬆ 1037 · 💬 306</span>
+          </div>
         </div>
       </a>
-      <a class="card" href="https://www.reddit.com/r/blackcats/comments/1xpkjlo/im_scared/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/oc5pwi2ge10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">I’m scared</div>
-          <div class="meta">r/blackcats · ⬆️ 678 · 💬 20</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/AnimalsBeingDerps/comments/1xpl8nc/watermelons/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/vquve718j10i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Watermelons.</div>
-          <div class="meta">r/AnimalsBeingDerps · ⬆️ 428 · 💬 5</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/whatdoIdo/comments/1xpcmbm/aitah_for_reporting_my_sil_whos_also_my_manager/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">AITAH for reporting my SIL (who’s also my manager) to HR for cutting my hours bc I’m pregnant, even tho my husband begged me not to?</div>
-          <div class="meta">r/whatdoIdo · ⬆️ 220 · 💬 127</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/nextfuckinglevel/comments/1xpjs29/i_spent_5_years_light_painting_2166_photos_to/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/i-spent-5-years-light-painting-2-166-photos-to-make-this-v0-NnlhenNlNnU4MTBpMSbslbkeUt0-VpvR_iMyejhW8OLFnSj7vezZVkPn-6Xh.png?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=53a8ffe1e16489f3a27c3f5a4f4e07ff81ecb034" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">I spent 5 years light painting 2,166 photos to make this stop motion trilogy</div>
-          <div class="meta">r/nextfuckinglevel · ⬆️ 752 · 💬 39</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/PoursTea/comments/1xpe13j/never_forget_that_these_celebrities_hasbeens/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/cm6swm2n400i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Never forget that these celebrities has-beens supported Trump and should be ashamed of themselves</div>
-          <div class="meta">r/PoursTea · ⬆️ 862 · 💬 167</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/whatdoIdo/comments/1xpih0p/am_i_being_groomed/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">am I being groomed?</div>
-          <div class="meta">r/whatdoIdo · ⬆️ 200 · 💬 200</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/ChatGPT/comments/1xpd15d/i_just_spammed_chatgpt_like_10_times_and_this/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/g9ga1z3pwzzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">📈 ترندهای روز</span></div>
-        <div class="body">
-          <div class="title">I just spammed chatgpt like 10 times and this happened</div>
-          <div class="meta">r/ChatGPT · ⬆️ 507 · 💬 211</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/NatureIsFuckingLit/comments/1xpgzn0/not_often_you_see_a_roe_deer_and_barn_owl_cross/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/9dmjhuu3q00i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">🔥 Not often you see a roe deer and barn owl cross paths 📍</div>
-          <div class="meta">r/NatureIsFuckingLit · ⬆️ 1151 · 💬 8</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/SipsTea/comments/1xpi9wv/he_has_a_point/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/he-has-a-point-v0-eXJlbWI2YXZ5MDBpMXHeE2adA_0LDGBhvrANb_u2OxJafhAtSZCQjmvOSDxX.jpeg?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=1b74fe0389867a899d92575bf5d4a38e177187e2" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">He has a point</div>
-          <div class="meta">r/SipsTea · ⬆️ 4348 · 💬 690</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/BeAmazed/comments/1xpiuu7/this_starfish_gently_buried_itself_in_the_sand/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/this-starfish-gently-buried-itself-in-the-sand-v0-bDBib3pyanQyMTBpMRZyUkOme4vnirGUzEtpAh0-D3C-0MER_UmqlACYUpnq.png?format=pjpg&amp;auto=webp&amp;s=817ffc4aed512e6e2cdfcc4ae964835177ee1759" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">This Starfish gently buried itself in the sand.</div>
-          <div class="meta">r/BeAmazed · ⬆️ 1603 · 💬 47</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/Xennials/comments/1xpieqs/has_anyone_else_lost_interest_in_music_as_you_got/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Has anyone else lost interest in music as you got older?</div>
-          <div class="meta">r/Xennials · ⬆️ 208 · 💬 480</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/blackcats/comments/1xpg0wa/finally_got_my_own_baby_void/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://preview.redd.it/finally-got-my-own-baby-void-v0-8m9m6s2cj00i1.jpeg?width=640&amp;crop=smart&amp;auto=webp&amp;s=b36b4a5653d95b3a640fcaf3896d8d255768b5cc" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Finally got my own baby void 😭</div>
-          <div class="meta">r/blackcats · ⬆️ 666 · 💬 17</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/AnimalsBeingDerps/comments/1xpjdd1/behind_the_cuteness_its_actually_a_lot_of_hard/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/behind-the-cuteness-its-actually-a-lot-of-hard-work-v0-ODRzcnRkM2E2MTBpMV1NMIbDeXBMYiFIfWT_fU8CovIGkgBzj8GTG7HuGSmJ.png?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=b7ed6eafcad101c9c6f89e6d7b773df87a0d3db0" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Behind the cuteness, it’s actually a lot of hard work.</div>
-          <div class="meta">r/AnimalsBeingDerps · ⬆️ 596 · 💬 14</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/NoStupidQuestions/comments/1xpfgv9/wtf_is_gonna_happen_when_putin_dies_hes_74_is/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">🧠 فکت و دانستنی</span></div>
-        <div class="body">
-          <div class="title">WTF is gonna happen when Putin dies? He&#39;s 74. Is there a contingency plan for a country that has thousands of nukes?</div>
-          <div class="meta">r/NoStupidQuestions · ⬆️ 513 · 💬 412</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/NatureIsFuckingLit/comments/1xp8slj/cobra_hatchlings_guarded_by_mother/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/cobra-hatchlings-guarded-by-mother-v0-c2FrM2duOTlxeXpoMf4xKvsrk8_2INBwsjPtuE8CGRE1g8yIOU8bI8J-LHi0.png?format=pjpg&amp;auto=webp&amp;s=a5240ddb4d0aa4582a57672272ecca15cfca17e1" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">🔥Cobra hatchlings guarded by mother</div>
-          <div class="meta">r/NatureIsFuckingLit · ⬆️ 15158 · 💬 2114</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/NatureIsFuckingLit/comments/1xp84wx/a_bonded_pair_of_pacific_parrotlets_sharing_a/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/a-bonded-pair-of-pacific-parrotlets-sharing-a-moment-v0-eXhmandpamhpeXpoMfiu2luj1YxBGHCH3HMvp0sgfjOD-BEmIvsQ8_MmJpPk.jpeg?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=9bdda77e2a51df64efb84ee924bdabff65a627c0" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">🔥🔥A bonded pair of Pacific parrotlets sharing a moment</div>
-          <div class="meta">r/NatureIsFuckingLit · ⬆️ 3393 · 💬 23</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/NatureIsFuckingLit/comments/1xpch05/momma_buffalo_saves_her_calf/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/momma-buffalo-saves-her-calf-v0-czEzancyZjFzenpoMdtiSHpRgj9LUUZE1NTXLCXmdETexHt6bRaHlCXdGYEw.png?format=pjpg&amp;auto=webp&amp;s=4701ce1b9c393224b5fc4c019e0ee2b09ac72c17" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">🔥Momma Buffalo saves her calf.</div>
-          <div class="meta">r/NatureIsFuckingLit · ⬆️ 3307 · 💬 207</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/nextfuckinglevel/comments/1xp8j18/never_knew_a_firework_could_change_gears/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/never-knew-a-firework-could-change-gears-mid-flight-like-v0-NnBiMG44ODJueXpoMRlAA73l3GghPNzXxQq4hu0lBXmDJ5-aZupe4eaBinGE.png?format=pjpg&amp;auto=webp&amp;s=c7199414a636395d6fac6334b6ddd896cb759f65" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Never knew a firework could change gears mid-flight like that💀</div>
-          <div class="meta">r/nextfuckinglevel · ⬆️ 4544 · 💬 427</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/nextfuckinglevel/comments/1xpbrgc/this_shit_triggers_my_claustrophobia_everytime/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/this-shit-triggers-my-claustrophobia-everytime-v0-aDlqcDJhZHdsenpoMcuQ2wp8uO9Mz8hSTdydTvLXjytz-9JOp4JxX3RiSdQ8.png?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=99e3a5b49dad8c3861c3aa3bae80b9bd2f1d9c72" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">This shit triggers my claustrophobia everytime</div>
-          <div class="meta">r/nextfuckinglevel · ⬆️ 3865 · 💬 539</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/nextfuckinglevel/comments/1xpaw40/yangwang_u9x_byd_have_hit_over_500_kmhr_in_abu/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/yangwang-u9x-byd-have-hit-over-500-km-hr-in-abu-dhabi-v0-ZndxaG84MWtkenpoMYnKhCanH8CLjBblmpyiBKXP7lrJfA-iVUAUmLpyGvHK.png?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=59d5a9d971a48b677bfa96fef14724889492ea00" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Yangwang U9X (BYD) have hit over 500 KM/hr in Abu Dhabi highway top speed run. German racing driver Marc Basseng achieved the speed during a controlled highway run.</div>
-          <div class="meta">r/nextfuckinglevel · ⬆️ 2073 · 💬 214</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/interestingasfuck/comments/1xpe5ia/this_is_a_capuchinbird_perissocephalus_tricolor/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/this-is-a-capuchinbird-perissocephalus-tricolor-v0-Yzk0a2hmY2w1MDBpMZSZ_aWFTS6NAh3apAZJ5I6bM2Qx0TExgF4Q021Gxf8q.jpeg?width=640&amp;crop=smart&amp;format=pjpg&amp;auto=webp&amp;s=29ce4275a8c359d1db199a7a7e127c7553f047a4" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">This is a Capuchinbird (Perissocephalus tricolor)</div>
-          <div class="meta">r/interestingasfuck · ⬆️ 10715 · 💬 364</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/interestingasfuck/comments/1xpevcp/dad_and_brother_come_to_see_the_new_little_one/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/dad-and-brother-come-to-see-the-new-little-one-v0-NnB5N3BjczJiMDBpMWdiPDfyypUYQJhAOvn3uD3VgXj9S4xBIJzrYbUF1tF5.png?format=pjpg&amp;auto=webp&amp;s=cf3d71792a1155a5a2e3ac838a9cc6d4698842ff" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Dad and brother come to see the new little one.</div>
-          <div class="meta">r/interestingasfuck · ⬆️ 5485 · 💬 168</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/interestingasfuck/comments/1xpcb0a/2800_year_old_cannabis_seeds_and_human_hair/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/gl7ykv4pqzzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">2800 year old cannabis seeds and human hair revealed intoxicating cannabis use in the eighth century B.C.</div>
-          <div class="meta">r/interestingasfuck · ⬆️ 4308 · 💬 264</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/SipsTea/comments/1xp9fty/do_it/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/zrqoaeflxyzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Do it!</div>
-          <div class="meta">r/SipsTea · ⬆️ 14112 · 💬 68</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/SipsTea/comments/1xpckuf/trump_signs_order_preventing_future_presidents/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://b.thumbs.redditmedia.com/dag9R4y2PTWax4oVHBSGwb8hHDSrH0aA9nYAL9I54Co.png" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Trump signs order preventing future presidents from changing Oval Office. Declares his redesigned Oval Office a national monumen.</div>
-          <div class="meta">r/SipsTea · ⬆️ 10828 · 💬 4514</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/SipsTea/comments/1xphcf6/lucky_man/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/ofqq2uwjs00i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Lucky man.</div>
-          <div class="meta">r/SipsTea · ⬆️ 2945 · 💬 107</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/BeAmazed/comments/1xp84f0/walmart_parking_lot/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://external-preview.redd.it/walmart-parking-lot-v0-dGd3dWNteWFpeXpoMdDuXIKmRgaAiSLHRA8Z1cR1al2Z-xeLWCzII26IDdbl.png?format=pjpg&amp;auto=webp&amp;s=879d6ecfebb97837acb7ef552cd924a425cf363c" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Walmart Parking Lot</div>
-          <div class="meta">r/BeAmazed · ⬆️ 6141 · 💬 811</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/PoursTea/comments/1xpb4om/a_defiant_pete_hegseth_took_to_the_camera_today/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/sfsys9qtfzzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">A defiant Pete Hegseth took to the camera today to inform his critics that trying to impeach him is a total waste of everyone’s afternoon, boldly declaring that the maneuver simply “won’t work with me.”</div>
-          <div class="meta">r/PoursTea · ⬆️ 1707 · 💬 270</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/PoursTea/comments/1xpd9ex/time_for_a_bit_of_education/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/71rlywcqyzzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Time for a bit of education.</div>
-          <div class="meta">r/PoursTea · ⬆️ 894 · 💬 22</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/PoursTea/comments/1xpeqf2/this/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/uh3dxnc1a00i1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">This...</div>
-          <div class="meta">r/PoursTea · ⬆️ 579 · 💬 34</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/Xennials/comments/1xp605w/diagramming_sentences_in_junior_high_do_they/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/a2bbmj6qrxzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Diagramming sentences in junior high?   Do they still teach this in American public schools?  I was 12 years old having to do this in public school in Southern Ohio.</div>
-          <div class="meta">r/Xennials · ⬆️ 582 · 💬 511</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/blackcats/comments/1xp5r1m/my_void_at_her_last_vet_visit_just_vaccines/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/nu1e37zpqxzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">My void at her last vet visit (just vaccines).</div>
-          <div class="meta">r/blackcats · ⬆️ 9000 · 💬 168</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/blackcats/comments/1xpalvi/hello_i_am_puma/" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.redd.it/mzss8y189zzh1.jpeg" referrerpolicy="no-referrer" loading="lazy" alt=""><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">Hello I am Puma</div>
-          <div class="meta">r/blackcats · ⬆️ 1529 · 💬 24</div>
-        </div>
-      </a>
-      <a class="card" href="https://www.reddit.com/r/whatdoIdo/comments/1xp5jrc/update_i_found_a_hair_scrunchie_in_my_boyfriends/" target="_blank" rel="noopener">
-        <div class="thumb"><div class="noimg">بدون تصویر</div><span class="badge">⭐ پسندیده‌های من</span></div>
-        <div class="body">
-          <div class="title">UPDATE: I found a hair scrunchie in my boyfriend&#39;s jacket that isn&#39;t mine. I finally asked him about it.</div>
-          <div class="meta">r/whatdoIdo · ⬆️ 765 · 💬 592</div>
-        </div>
-      </a></main>
+    <div class="empty" id="empty-all" hidden>
+      <div class="ico">📭</div>
+      <h3>هنوز پستی جمع نشده</h3>
+      <p>اسکریپت هر ساعت بروز می‌شه. کمی صبر کنید.</p>
+    </div>
+    
+      <div class="empty" data-empty="trends" hidden>
+        <div class="ico">🔥</div>
+        <h3>هنوز محتوایی برای «ترندهای روز» جمع نشده</h3>
+        <p>ترندهای اینستاگرام، تیک‌تاک، X، هشتگ‌های داغ و اتفاقات بین‌المللی</p>
+        <p class="subs-list">ساب‌ردیت‌های این دسته: r/technology، r/ChatGPT، r/isthisAI</p>
+      </div>
+      <div class="empty" data-empty="memes" hidden>
+        <div class="ico">😂</div>
+        <h3>هنوز محتوایی برای «میم و فان» جمع نشده</h3>
+        <p>میم‌ها، ویدیوهای خنده‌دار، عکس و کپشن‌های فان و شوخی‌های اینترنتی</p>
+        <p class="subs-list">ساب‌ردیت‌های این دسته: r/dadjokes، r/mildlyinfuriating، r/GirlDinnerDiaries، r/LoveTrash، r/SipsTea، r/TopCharacterTropes</p>
+      </div>
+      <div class="empty" data-empty="facts" hidden>
+        <div class="ico">🧠</div>
+        <h3>هنوز محتوایی برای «فکت و دانستنی» جمع نشده</h3>
+        <p>نکات جالب، حقایق شنیده‌نشده، تکنولوژی و دانستنی‌های روزمره</p>
+        <p class="subs-list">ساب‌ردیت‌های این دسته: r/AskReddit، r/NoStupidQuestions، r/howislivingthere، r/interestingasfuck</p>
+      </div>
+      <div class="empty" data-empty="viral" hidden>
+        <div class="ico">📣</div>
+        <h3>هنوز محتوایی برای «اتفاقات داغ» جمع نشده</h3>
+        <p>حاشیه‌های شبکه‌های اجتماعی، سلبریتی‌ها، اتفاقات ایران و واکنش‌ها</p>
+        <p class="subs-list">ساب‌ردیت‌های این دسته: r/popculturechat، r/PoursTea، r/Xennials</p>
+      </div>
+      <div class="empty" data-empty="video" hidden>
+        <div class="ico">🎬</div>
+        <h3>هنوز محتوایی برای «ویدیو و کلیپ» جمع نشده</h3>
+        <p>کلیپ‌های کوتاه، ویدیوهای وایرال، ریلزهای اینستاگرام و خلاصه ویدیوهای جذاب</p>
+        <p class="subs-list">ساب‌ردیت‌های این دسته: r/dashcams، r/toolgifs، r/AccidentalSlapStick، r/NatureIsFuckingLit، r/nextfuckinglevel، r/BeAmazed، r/AnimalsBeingDerps، r/blackcats</p>
+      </div>
+  </main>
+
+  <footer>فقط عنوان و لینک پست‌ها نمایش داده می‌شه. روی هر کارت بزنید تا پست اصلی در ردیت باز بشه.</footer>
+</div>
+
+<script>
+(function () {
+  var tabs = document.querySelectorAll('.tab');
+  var cards = document.querySelectorAll('.card');
+  var empties = document.querySelectorAll('.empty[data-empty]');
+  var allEmpty = document.getElementById('empty-all');
+  var desc = document.getElementById('catdesc');
+  var keys = [];
+  tabs.forEach(function (t) { keys.push(t.getAttribute('data-key')); });
+
+  function currentKey() {
+    var h = (location.hash || '').slice(1);
+    return keys.indexOf(h) > -1 ? h : 'all';
+  }
+
+  function show(key) {
+    var visible = 0;
+    tabs.forEach(function (t) {
+      var active = t.getAttribute('data-key') === key;
+      t.classList.toggle('active', active);
+      if (active) desc.textContent = t.getAttribute('data-desc') || '';
+    });
+    cards.forEach(function (c) {
+      var ok = key === 'all' || c.getAttribute('data-cat') === key;
+      c.hidden = !ok;
+      if (ok) visible++;
+    });
+    empties.forEach(function (e) {
+      e.hidden = !(key !== 'all' && e.getAttribute('data-empty') === key && visible === 0);
+    });
+    allEmpty.hidden = !(key === 'all' && cards.length === 0);
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      var k = t.getAttribute('data-key');
+      history.replaceState(null, '', k === 'all' ? location.pathname : '#' + k);
+      show(k);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  window.addEventListener('hashchange', function () { show(currentKey()); });
+  show(currentKey());
+})();
+</script>
 </body>
 </html>
